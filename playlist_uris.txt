@@ -1,0 +1,3 @@
+name, uri
+2000s Bops,    spotify:playlist:0SqojhPLvEpsg9giftSUx7
+Kpop,    spotify:playlist:6mQ256r9AwXBIdfd36Gbob
