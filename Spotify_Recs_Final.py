@@ -32,8 +32,8 @@ def main():
 
     #data = pd.read_csv("spotify_scaled.csv")
 
-    #data = pd.read_csv("spotify_new.csv")
-    data = pd.read_csv("spotify_no_children.csv")
+    data = pd.read_csv("spotify_new.csv")
+    #data = pd.read_csv("spotify_no_children.csv")
 
     data_num = data[num_features]
     data_labels = data.drop(columns=num_features)
@@ -69,10 +69,8 @@ def main():
             print("Invalid Input")
     
     # run this line if we are doing the Gower distance
-    final_numerical['Genre'] = data.track_genre
-    print(final_numerical)
-    final_labels.drop(columns=['track_genre'],inplace=True)
-    print(final_labels)
+    # final_numerical['Genre'] = data.track_genre
+    # final_labels.drop(columns=['track_genre'],inplace=True)
 
     while True:
         try: 
@@ -82,7 +80,7 @@ def main():
             print("3. Scroll down to the share option, hover over Share, press option, and click the option: Copy Spotify URI\n")
             print('Note: this program will only generate recommendations based on the first 10 songs of the playlist\n')
             input_uri = input("Please input a Spotify Playlist URI: ")
-            recs = get_distance_recs_playlist_gower(input_uri,final_numerical,final_labels,scale_fit,sp)
+            recs = get_distance_recs_playlist_1(input_uri,final_numerical,final_labels,scale_fit,sp)
             if(input_uri=="q"):
                 return 0
         except: 
