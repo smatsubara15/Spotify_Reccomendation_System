@@ -92,7 +92,8 @@ def main():
             print("1. Go into the desired playlist and make sure the playlist is public")
             print("2. Click on the 3 horizontal dots for more options")
             print("3. Scroll down to the share option, hover over Share, press option, and click the option: Copy Spotify URI\n")
-            print('Note: this program will only generate recommendations based on the first 10 songs of the playlist\n')
+            print('Note: this program will only generate recommendations based on the first 10 songs of the playlist.')
+            print('Because of this, you may get songs that are already in your playlist that are after the first 10.\n')
             input_uri = input("Please input a Spotify Playlist URI: ")
             if(genre_based.lower()=='y'):
                 recs = get_distance_recs_playlist_gower(input_uri,final_numerical,final_labels,scale_fit,sp)

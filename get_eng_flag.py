@@ -25,9 +25,9 @@ def get_eng_flag(data):
 
     data['eng_flag']=eng_flag
 
-data = pd.read_csv("spotify_new.csv")
+data = pd.read_csv("spotify_no_children.csv")
 data_new = get_eng_flag(data)
-data_new.to_csv('spoty_new_w_langflag.csv',mode='w+')
+data_new.to_csv('spotify_no_children_w_langflag.csv',mode='w+')
 
 # langdetect works decently, but some non english songs still slip through
             

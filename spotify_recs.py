@@ -105,6 +105,7 @@ def get_distance_recs_playlist_2(uri,data,data_labels,scaler,sp):
     recs = []
     distances = []
     
+    print('\n')
     for i in range(len(df)):
         print("Gettings Recs for Song "+ str(i+1))
         song_recs,distance = get_distance_recs_song(df.iloc[i],data,data_labels)
