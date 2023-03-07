@@ -25,7 +25,7 @@ def get_distance_recs_song(features,data,data_labels):
     distances = []
     for j in range(len(data_new)):
         dist = np.linalg.norm(features - np.array(data_new.iloc[j]))
-        if dist==0:
+        if dist<0.001:
             distances.append(1000000)
         else:
             distances.append(dist)
@@ -33,6 +33,8 @@ def get_distance_recs_song(features,data,data_labels):
     data_new['Distance'] = distances
     data_new = data_new.join(data_labels)
     data_new = data_new.sort_values(by=['Distance'])
+    #distances_sorted = list(data_new['Distance'])
+    #print(distances_sorted[:4])
     return data_new,distances
     
 def get_distance_recs_song_gower(features,data,data_labels):
@@ -67,6 +69,7 @@ def get_distance_recs_playlist_1(uri,data,data_labels,scaler,sp):
     recs = []
     
     for i in range(len(df)):
+        print("Gettings Recs for Song "+ str(i))
         song_recs,distance = get_distance_recs_song(df.iloc[i],data,data_labels)
         recs.extend([list(song_recs.iloc[i,:]) for i in range(3)])
 
@@ -79,8 +82,9 @@ def get_distance_recs_playlist_1(uri,data,data_labels,scaler,sp):
     
     final_recs = pd.DataFrame(recs,columns=cols)
 
-    return final_recs[~final_recs['track_id'].isin(ids)]
+    final_recs = final_recs[~final_recs['track_id'].isin(ids)]
 
+    return final_recs.drop_duplicates(subset=['track_id'])
 
 
 # Gets n number of recs from each song then finds the distance from each inputted song to all songs in the corpus. Finds the average distance from
@@ -98,6 +102,7 @@ def get_distance_recs_playlist_2(uri,data,data_labels,scaler,sp):
     distances = []
     
     for i in range(len(df)):
+        print("Gettings Recs for Song "+ str(i))
         song_recs,distance = get_distance_recs_song(df.iloc[i],data,data_labels)
         recs.extend([list(song_recs.iloc[i,:]) for i in range(3)])
         distances.append(distance)
@@ -125,7 +130,7 @@ def get_distance_recs_playlist_2(uri,data,data_labels,scaler,sp):
 # data_numerical['Genre'] = data.track_genre
 # data_labels.drop(columns=['track_genre'],inplace=True)
 def get_distance_recs_playlist_gower(uri,data,data_labels,scaler,sp):
-    # Get the index of the track with the given ID
+
     df_original = get_playlist_df('spotify', uri, sp, song_limit=8)
     ids = list(df_original['track_id'])
     genres = list(df_original['track_genre'])
@@ -146,6 +151,7 @@ def get_distance_recs_playlist_gower(uri,data,data_labels,scaler,sp):
     recs = []
     
     for i in range(len(df)):
+        print("Gettings Recs for Song "+ str(i))
         song_recs = get_distance_recs_song_gower(df.iloc[i:i+1,:],data,data_labels)
         recs.extend([list(song_recs.iloc[i,:]) for i in range(3)])
 
@@ -156,7 +162,9 @@ def get_distance_recs_playlist_gower(uri,data,data_labels,scaler,sp):
     
     final_recs = pd.DataFrame(recs,columns=cols)
 
-    return final_recs[~final_recs['track_id'].isin(ids)]
+    final_recs = final_recs[~final_recs['track_id'].isin(ids)]
+
+    return final_recs.drop_duplicates(subset=['track_id'])
 
 
 

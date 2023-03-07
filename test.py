@@ -131,7 +131,7 @@ auth_manager = SpotifyClientCredentials(client_id = id_client,
 
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
-data = pd.read_csv("spotify_new.csv")
+data = pd.read_csv("spotify_no_children.csv")
 
 data_num = data[num_features]
 data_labels = data.drop(columns=num_features)
@@ -146,10 +146,17 @@ data_labels_eng = data_eng.drop(columns=num_features)
 scaler = StandardScaler()
 scale_fit = scaler.fit(data_num)
 
+# song features are getting different scaled values
 data_numerical = pd.DataFrame(scale_fit.transform(data_num),columns=num_features)
 data_numerical_eng = pd.DataFrame(scale_fit.transform(data_num_eng),columns=num_features)
 
-get_track_features('spotify:track:7I7Dk8FOkZqhqZp9N2RKiP',sp)
+print(data_labels.track_genre)
+print(data_labels_eng.track_genre)
+
+data_numerical_eng['Genre'] = data_labels.track_genre
+
+print(data_numerical_eng['Genre'])
+#get_track_features('spotify:track:7I7Dk8FOkZqhqZp9N2RKiP',sp)
 
 #input_uri = input("Please input a Spotify Playlist URI: ")
 # recs = get_distance_recs_playlist_4(input_uri,data_numerical_eng,data_labels_eng,scale_fit,sp)
