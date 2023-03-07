@@ -57,20 +57,18 @@ def main():
         english = input("Would you like most songs to be in English? (Y/N) ")
         if(english.lower()=='n'):
             final_numerical = data_numerical.copy()
-            #final_numerical['Genre'] = data_labels.track_genre
             final_labels = data_labels.copy()
             break
         
         elif(english.lower()=='y'):
             final_numerical = data_numerical_eng.copy()
-            #final_numerical['Genre'] = data_labels_eng.track_genre
             final_labels = data_labels_eng.copy()
             break
         else:
             print("Invalid Input")
     
     while True: 
-        genre_based = input("Would you like the playlist to be based on Genre? (Y/N) ")
+        genre_based = input("\nWould you like the playlist to be based on Genre? (Y/N) ")
         if(genre_based.lower()=='n'):
             break
         
@@ -90,7 +88,7 @@ def main():
 
     while True:
         try: 
-            print("To Get the Playlist URI:")
+            print("\nTo Get the Playlist URI:")
             print("1. Go into the desired playlist and make sure the playlist is public")
             print("2. Click on the 3 horizontal dots for more options")
             print("3. Scroll down to the share option, hover over Share, press option, and click the option: Copy Spotify URI\n")
@@ -128,7 +126,6 @@ def main():
     recs['title_stripped'] = recs['title_stripped'].str.split('-').str[0] 
     recs['title_stripped'] = recs['title_stripped'].str.strip()
     recs = recs.drop_duplicates(subset=['title_stripped'])
-
 
     playlist_url = create_playlist(recs,playlist_name,id_client,id_client_secret,True)
     print("\nYour Playlist is Ready!")
