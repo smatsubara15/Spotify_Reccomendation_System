@@ -9,7 +9,7 @@ from spotipy.oauth2 import SpotifyOAuth
 from sklearn.preprocessing import StandardScaler
 
 from spotify_recs import get_distance_recs_playlist_1
-from spotify_recs import get_distance_recs_playlist_2
+from spotify_recs import get_distance_recs_playlist_gower
 from spotify_utils import get_track_features
 import json
 
@@ -78,44 +78,6 @@ def get_distance_recs_playlist_new(df, data, data_labels,scaler,sp, OH = False):
     return data_new.sort_values(by=['Distance'])
 
 from statistics import mode
-
-def get_distance_recs_playlist_gower(uri,data,data_labels,scaler,sp):
-    # Get the index of the track with the given ID
-    df_original = get_playlist_df('spotify', uri, sp, song_limit=8)
-    ids = list(df_original['track_id'])
-    genres = list(df_original['track_genre'])
-    playlist_genre = list(mode(genres))
-    #genre = df_original['track_genre']
-
-    df_num = df_original[num_features]
-
-    df_combined = pd.DataFrame(df_num.mean(axis=0)).T
-    df_combined.columns=num_features
-
-    df_combined = pd.DataFrame(scaler.transform(df_combined),columns=num_features)
-    df = pd.DataFrame(scaler.transform(df_num),columns=num_features)
-    
-    df_combined['Genre'] = playlist_genre
-    df['Genre'] = df_original.track_genre
-    
-    labels = data_labels.drop(columns=['track_genre'],inplace=True)
-
-    recs = []
-    
-    for i in range(len(df)):
-        song_recs,distance = get_distance_recs_song_gower(df.iloc[i],data,labels)
-        recs.extend([list(song_recs.iloc[i,:]) for i in range(3)])
-
-    song_recs,distance = get_distance_recs_song_gower(df_combined.iloc[0],data,labels)
-    recs.extend([list(song_recs.iloc[i,:]) for i in range(5)])
-    
-    data_cols = list(data.columns)
-    data_cols.append('Distance') 
-    cols = data_cols + list(data_labels.columns)
-    
-    final_recs = pd.DataFrame(recs,columns=cols)
-
-    return final_recs[~final_recs['track_id'].isin(ids)]
 # data = pd.read_csv('spoty_new_w_langflag.csv')
 # print(data)
 num_features = ['popularity', 'danceability', 'energy', 'loudness', 'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo']
@@ -131,34 +93,26 @@ auth_manager = SpotifyClientCredentials(client_id = id_client,
 
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
-data = pd.read_csv("spotify_no_children.csv")
+data = pd.read_csv('spotify_new2.csv').drop(columns =['Unnamed: 0','level_0'])
+data = data[data.track_genre!='children'].reset_index()
 
 data_num = data[num_features]
-data_labels = data.drop(columns=num_features)
-
-data_eng = pd.read_csv('spoty_new_w_langflag.csv').drop(columns =['Unnamed: 0','level_0'])
-data_eng = data_eng[data_eng.eng_flag==1]
-data_eng = data_eng.reset_index()
-
-data_num_eng = data_eng[num_features]
-data_labels_eng = data_eng.drop(columns=num_features)
 
 scaler = StandardScaler()
 scale_fit = scaler.fit(data_num)
 
+final_numerical = data[num_features]
+final_labels = data.drop(columns=num_features)
+
 # song features are getting different scaled values
-data_numerical = pd.DataFrame(scale_fit.transform(data_num),columns=num_features)
-data_numerical_eng = pd.DataFrame(scale_fit.transform(data_num_eng),columns=num_features)
+final_numerical = pd.DataFrame(scale_fit.transform(final_numerical),columns=num_features)
 
-print(data_labels.track_genre)
-print(data_labels_eng.track_genre)
+final_numerical['Genre'] = final_labels['track_genre']
+final_numerical['mode'] = final_labels['mode']
+final_numerical['key'] = final_labels['key']
+final_labels.drop(columns=['track_genre','mode','key'],inplace=True)
 
-data_numerical_eng['Genre'] = data_labels.track_genre
-
-print(data_numerical_eng['Genre'])
-#get_track_features('spotify:track:7I7Dk8FOkZqhqZp9N2RKiP',sp)
-
-#input_uri = input("Please input a Spotify Playlist URI: ")
-# recs = get_distance_recs_playlist_4(input_uri,data_numerical_eng,data_labels_eng,scale_fit,sp)
-#print(recs[['track_name','artists']].head(10))
+input_uri = 'spotify:playlist:3Ins6u27JrxxYbQaQ0SmDY'
+recs = get_distance_recs_playlist_gower(input_uri,final_numerical,final_labels,scale_fit,sp)
+print(recs)
 #28501

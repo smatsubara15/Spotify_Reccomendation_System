@@ -59,9 +59,11 @@ def get_track_features(id, sp):
     tempo = features_info[0]['tempo']
     time_signature = features_info[0]['time_signature']
     valence = features_info[0]['valence']
+    mode = features_info[0]['mode']
+    key = features_info[0]['key']
     
     track_data = [name, album, artist, top_genre, release_date, length, popularity, acousticness, danceability, energy, 
-                  instrumentalness, liveness, loudness, speechiness, tempo, valence, time_signature]
+                  instrumentalness, liveness, loudness, speechiness, tempo, valence, time_signature,mode,key]
     
     return track_data    
 
@@ -90,7 +92,8 @@ def get_playlist_df(username, playlist_id, sp, song_limit=None):
                                                     'energy', 'instrumentalness', 
                                                     'liveness', 
                                                     'loudness', 'speechiness', 
-                                                    'tempo', 'valence', 'Time Signature'])     
+                                                    'tempo', 'valence', 'Time Signature',
+                                                    'mode','key'])     
 
     if ((song_limit is None) or (song_limit>total_tracks)):
         track_nums = total_tracks

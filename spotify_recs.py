@@ -134,7 +134,6 @@ def get_distance_recs_playlist_2(uri,data,data_labels,scaler,sp):
 # data_numerical['Genre'] = data.track_genre
 # data_labels.drop(columns=['track_genre'],inplace=True)
 def get_distance_recs_playlist_gower(uri,data,data_labels,scaler,sp):
-
     df_original = get_playlist_df('spotify', uri, sp, song_limit=8)
     ids = list(df_original['track_id'])
     song_names = list(df_original['track_name'])
@@ -158,8 +157,14 @@ def get_distance_recs_playlist_gower(uri,data,data_labels,scaler,sp):
     df = pd.DataFrame(scaler.transform(df_num),columns=num_features)
     
     df_combined['Genre'] = playlist_genre
+    df_combined['mode'] = [0]
+    df_combined['key'] = [1]
     df['Genre'] = df_original.track_genre
+    df['mode'] = df_original['mode']
+    df['key']= df_original['key']
 
+    print(data.columns)
+    print(df_combined.columns)
     recs = []
     
     for i in range(len(df)):

@@ -76,6 +76,8 @@ def main():
         
         elif(genre_based.lower()=='y'):
             final_numerical['Genre'] = final_labels.track_genre
+            final_numerical['mode'] = final_labels.mode
+            final_numerical['key'] = final_labels.key
             final_labels.drop(columns=['track_genre'],inplace=True)
             break
 
