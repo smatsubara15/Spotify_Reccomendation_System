@@ -190,7 +190,7 @@ def create_playlist(recs,playlist_name,id,id_secret,Public=False):
 
     # Create a new playlist
     playlist_name = playlist_name + " Playlist Recs"
-    playlist_description = "Playlist Consisting of Songs Recommended by Data Mining Team 4's Program"
+    playlist_description = "Playlist Consisting of Songs Recommended by Data Mining Team 2's Program"
     user_id = sp.me()["id"]
     new_playlist = sp.user_playlist_create(user=user_id, name=playlist_name, public=Public, description=playlist_description)
 
